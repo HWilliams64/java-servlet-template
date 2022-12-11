@@ -79,7 +79,7 @@ public class JokeServlet extends HttpServlet {
         out.println("<head><title>Jokes Feedback</title></head>");   
         out.println("<body bgcolor = \"#D6FDFF\">");  
 
-        out.println("<h1>" + "Thank you for you feedback" + "</h1>");  
+        out.println("<h1>" + "Thank you for your feedback" + "</h1>");  
         
         if(Objects.isNull(feedback) || feedback.isBlank()){
             feedback = "You did not have any feedback";
