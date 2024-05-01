@@ -22,5 +22,8 @@ dependencies {
 gretty {
     httpPort = 8080
     contextPath = '/'
-    scanInterval = 0
+    scanInterval = 1
 }
+
+
+ 

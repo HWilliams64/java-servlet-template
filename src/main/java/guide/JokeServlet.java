@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.Random;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,40 +31,19 @@ public class JokeServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();  
         int selectionIndex = new Random().nextInt(jokes.length);
         String[] jokeArray = jokes[selectionIndex];
         
-        out.println("<html>");   
-        out.println("<head><title>Jokes</title></head>");   
-        out.println("<body bgcolor = \"#FFFCD6\">");  
-        out.println("<h1>" + jokeArray[0] + "</h1>");      
-        out.println("<p><strong>" + jokeArray[1] + "</strong></p>");   
-        out.println("<button type=\"button\" onclick=\"window.location.reload();\">" + "Show another joke" + "</button>");     
-
-        String formString = MessageFormat.format(
-            """
-            <div style="padding-top:30px;">    
-            <form action="/joke/" method = "POST">
-            <label for="{0}">Did you like the joke?</label><br>
-            <input type="radio" id="yes" name="{0}" value="yes">
-            <label for="yes">Yes</label><br>
-            <input type="radio" id="n" name="{0}" value="no">
-            <label for="no">No</label><br>
-            <label for="{1}">More feedback (Optional):</label><br>
-            <input type="text" id="{1}" name="{1}"><br>
-            <input type="submit" value="Submit">
-            </form>
-            </div>
-            """, 
-            REACTION_KEY, FEEDBACK_KEY);
-
-        out.println(formString);   
-    
-        out.println("<p><small>" + Helper.getServiceInfo(this.getClass()) +"</small></p>"); 
-        out.println("</body>"); 
-        out.println("</html>"); 
+        Helper helper = new Helper();
+        request.setAttribute("serviceInfo", helper.getServiceInfo(this.getClass()));
+        request.setAttribute("jokeQuestion", jokeArray[0]);
+        request.setAttribute("jokeAnswer", jokeArray[1]);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/jokes.jsp");
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException e) {
+            throw new IOException(e);
+        } 
     }
 
 
